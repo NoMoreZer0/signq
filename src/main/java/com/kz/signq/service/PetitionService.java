@@ -1,0 +1,18 @@
+package com.kz.signq.service;
+
+import com.kz.signq.dto.EntityIdDto;
+import com.kz.signq.dto.PetitionDto;
+import com.kz.signq.model.Petition;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+public interface PetitionService {
+
+    List<Petition> getAll();
+
+    Optional<Petition> getById(UUID id);
+
+    EntityIdDto save(PetitionDto petitionDto);
+}
