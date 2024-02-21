@@ -1,5 +1,6 @@
 package com.kz.signq.controller;
 
+import com.kz.signq.dto.EntityIdDto;
 import com.kz.signq.dto.PetitionDto;
 import com.kz.signq.model.User;
 import com.kz.signq.service.PetitionService;
@@ -42,8 +43,28 @@ public class PetitionController {
 
     @GetMapping("/my")
     public ResponseEntity<?> getCreated() {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        var user = (User) authentication.getPrincipal();
+        var user = getCurrentUser();
         return ResponseEntity.ok().body(petitionService.getCreatedPetitions(user));
+    }
+
+    @PostMapping("/sign")
+    public ResponseEntity<?> sign(@RequestBody EntityIdDto entityIdDto) {
+        try {
+            var user = getCurrentUser();
+            return ResponseEntity.ok().body(petitionService.sign(user, entityIdDto));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/signed")
+    public ResponseEntity<?> getSignedPetition() {
+        var user = getCurrentUser();
+        return ResponseEntity.ok().body(petitionService.findSignedPetitions(user));
+    }
+
+    private User getCurrentUser() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (User) authentication.getPrincipal();
     }
 }
