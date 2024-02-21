@@ -1,9 +1,11 @@
 package com.kz.signq.controller;
 
 import com.kz.signq.dto.PetitionDto;
+import com.kz.signq.model.User;
 import com.kz.signq.service.PetitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -12,7 +14,7 @@ import java.util.UUID;
 @RequestMapping("/petition")
 public class PetitionController {
 
-    private PetitionService petitionService;
+    private final PetitionService petitionService;
 
     @Autowired
     public PetitionController(PetitionService petitionService) {
@@ -36,5 +38,12 @@ public class PetitionController {
             @PathVariable UUID id
     ) {
         return ResponseEntity.ok().body(petitionService.getById(id));
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<?> getCreated() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok().body(petitionService.getCreatedPetitions(user));
     }
 }

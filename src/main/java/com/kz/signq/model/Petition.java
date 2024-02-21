@@ -1,8 +1,8 @@
 package com.kz.signq.model;
 
 import com.kz.signq.model.base.BaseEntityAudit;
-import jakarta.annotation.Nullable;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.*;
 
 @Entity
@@ -16,10 +16,10 @@ public class Petition extends BaseEntityAudit {
 
     private String title;
 
-    @Nullable
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "image_id", referencedColumnName = "id")
-    private Image img;
+//    @Nullable
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "image_id", referencedColumnName = "id")
+//    private Image img;
 
     private String body;
 
