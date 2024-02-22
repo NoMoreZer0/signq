@@ -5,9 +5,14 @@ import com.kz.signq.model.Petition;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.UUID;
+
 @Builder
 @Getter
 public class PetitionResponseDto {
+    @JsonProperty("id")
+    private UUID id;
+
     @JsonProperty("title")
     private String title;
 
@@ -22,6 +27,7 @@ public class PetitionResponseDto {
 
     public static PetitionResponseDto fromPetition(Petition petition, boolean isOwner) {
         return PetitionResponseDto.builder()
+                .id(petition.getId())
                 .body(petition.getBody())
                 .title(petition.getTitle())
                 .agency(petition.getAgency())
