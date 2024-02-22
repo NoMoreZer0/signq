@@ -6,6 +6,7 @@ import com.kz.signq.model.User;
 import com.kz.signq.service.PetitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -66,6 +67,9 @@ public class PetitionController {
 
     private User getCurrentUser() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof AnonymousAuthenticationToken) {
+            return null;
+        }
         return (User) authentication.getPrincipal();
     }
 }

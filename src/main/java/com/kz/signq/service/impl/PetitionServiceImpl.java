@@ -50,7 +50,10 @@ public class PetitionServiceImpl implements PetitionService {
         var petitions = db.findAll();
         var allPetitions = new ArrayList<PetitionResponseDto>();
         petitions.forEach(petition -> {
-            var isOwner = user.getId().equals(petition.getCreatedBy());
+            var isOwner = false;
+            if (user != null) {
+                user.getId().equals(petition.getCreatedBy());
+            }
             allPetitions.add(
                     PetitionResponseDto.fromPetition(petition, isOwner)
             );
