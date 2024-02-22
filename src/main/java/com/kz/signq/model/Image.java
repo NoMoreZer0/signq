@@ -1,6 +1,6 @@
 package com.kz.signq.model;
 
-import com.kz.signq.dto.ImageDto;
+import com.kz.signq.dto.image.ImageDto;
 import com.kz.signq.model.base.BaseEntityAudit;
 import com.kz.signq.utils.ImageUtils;
 import jakarta.persistence.Column;

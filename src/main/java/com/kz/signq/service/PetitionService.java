@@ -1,8 +1,9 @@
 package com.kz.signq.service;
 
 import com.kz.signq.dto.EntityIdDto;
-import com.kz.signq.dto.PetitionDto;
-import com.kz.signq.dto.PetitionsDto;
+import com.kz.signq.dto.petition.PetitionDto;
+import com.kz.signq.dto.petition.PetitionResponseDto;
+import com.kz.signq.dto.petition.PetitionsDto;
 import com.kz.signq.exception.PetitionAlreadySignedByUserException;
 import com.kz.signq.exception.PetitionNotFoundException;
 import com.kz.signq.model.Petition;
@@ -14,7 +15,7 @@ import java.util.UUID;
 
 public interface PetitionService {
 
-    List<Petition> getAll();
+    List<PetitionResponseDto> getAll(User user);
 
     Optional<Petition> getById(UUID id);
 

@@ -1,7 +1,7 @@
 package com.kz.signq.controller;
 
-import com.kz.signq.dto.LoginDto;
-import com.kz.signq.dto.RegisterDto;
+import com.kz.signq.dto.authentication.LoginDto;
+import com.kz.signq.dto.authentication.RegisterDto;
 import com.kz.signq.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

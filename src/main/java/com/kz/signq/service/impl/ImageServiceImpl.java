@@ -2,7 +2,7 @@ package com.kz.signq.service.impl;
 
 import com.kz.signq.db.ImageDb;
 import com.kz.signq.dto.EntityIdDto;
-import com.kz.signq.dto.ImageDto;
+import com.kz.signq.dto.image.ImageDto;
 import com.kz.signq.model.Image;
 import com.kz.signq.service.ImageService;
 import com.kz.signq.utils.ImageUtils;

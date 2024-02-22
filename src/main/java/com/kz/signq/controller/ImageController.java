@@ -1,6 +1,6 @@
 package com.kz.signq.controller;
 
-import com.kz.signq.dto.ImageDto;
+import com.kz.signq.dto.image.ImageDto;
 import com.kz.signq.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

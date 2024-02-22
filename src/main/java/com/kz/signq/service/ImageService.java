@@ -1,7 +1,7 @@
 package com.kz.signq.service;
 
 import com.kz.signq.dto.EntityIdDto;
-import com.kz.signq.dto.ImageDto;
+import com.kz.signq.dto.image.ImageDto;
 import com.kz.signq.model.Image;
 
 import java.util.Optional;

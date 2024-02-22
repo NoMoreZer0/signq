@@ -1,4 +1,4 @@
-package com.kz.signq.dto;
+package com.kz.signq.dto.petition;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kz.signq.model.Petition;

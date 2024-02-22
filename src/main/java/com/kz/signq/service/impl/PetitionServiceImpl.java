@@ -2,8 +2,9 @@ package com.kz.signq.service.impl;
 
 import com.kz.signq.db.PetitionDb;
 import com.kz.signq.dto.EntityIdDto;
-import com.kz.signq.dto.PetitionDto;
-import com.kz.signq.dto.PetitionsDto;
+import com.kz.signq.dto.petition.PetitionDto;
+import com.kz.signq.dto.petition.PetitionResponseDto;
+import com.kz.signq.dto.petition.PetitionsDto;
 import com.kz.signq.exception.PetitionAlreadySignedByUserException;
 import com.kz.signq.exception.PetitionNotFoundException;
 import com.kz.signq.model.Petition;
@@ -45,8 +46,16 @@ public class PetitionServiceImpl implements PetitionService {
     }
 
     @Override
-    public List<Petition> getAll() {
-        return db.findAll();
+    public List<PetitionResponseDto> getAll(User user) {
+        var petitions = db.findAll();
+        var allPetitions = new ArrayList<PetitionResponseDto>();
+        petitions.forEach(petition -> {
+            var isOwner = user.getId().equals(petition.getCreatedBy());
+            allPetitions.add(
+                    PetitionResponseDto.fromPetition(petition, isOwner)
+            );
+        });
+        return allPetitions;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.kz.signq.controller;
 
 import com.kz.signq.dto.EntityIdDto;
-import com.kz.signq.dto.PetitionDto;
+import com.kz.signq.dto.petition.PetitionDto;
 import com.kz.signq.model.User;
 import com.kz.signq.service.PetitionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,8 @@ public class PetitionController {
 
     @GetMapping
     public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok().body(petitionService.getAll());
+        var user = getCurrentUser();
+        return ResponseEntity.ok().body(petitionService.getAll(user));
     }
 
     @GetMapping("/{id}")
