@@ -4,6 +4,7 @@ import com.kz.signq.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -47,6 +48,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/healthcheck").permitAll()
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/swagger-resources/*", "/v3/api-docs/**").permitAll()
+                .requestMatchers(HttpMethod.GET,"/petition").permitAll()
                 .anyRequest().authenticated()
             )
             .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
