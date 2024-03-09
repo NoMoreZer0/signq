@@ -2,6 +2,7 @@ package com.kz.signq.config;
 
 import com.kz.signq.service.CustomUserDetailsService;
 import com.kz.signq.utils.JwtUtil;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,7 +47,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         var jwt = authHeader.substring(BEARER_PREFIX.length());
-        var username = jwtUtil.extractUserName(jwt);
+
+        String username;
+        try {
+            username = jwtUtil.extractUserName(jwt);
+        } catch (ExpiredJwtException e){
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token is expired");
+            return;
+        }
+
         if (!username.isEmpty() && SecurityContextHolder.getContext().getAuthentication() == null) {
             var userDetails = customUserDetailsService.userDetailsService()
                     .loadUserByUsername(username);
