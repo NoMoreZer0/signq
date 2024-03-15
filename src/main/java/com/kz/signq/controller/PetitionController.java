@@ -2,6 +2,7 @@ package com.kz.signq.controller;
 
 import com.kz.signq.dto.EntityIdDto;
 import com.kz.signq.dto.petition.PetitionDto;
+import com.kz.signq.exception.PetitionNotFoundException;
 import com.kz.signq.model.User;
 import com.kz.signq.service.PetitionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,16 @@ public class PetitionController {
     public ResponseEntity<?> getCreated() {
         var user = getCurrentUser();
         return ResponseEntity.ok().body(petitionService.getCreatedPetitions(user));
+    }
+
+    @PostMapping("/isMy")
+    public ResponseEntity<?> isMyPetition(@RequestBody EntityIdDto entityIdDto) {
+        try {
+            var user = getCurrentUser();
+            return ResponseEntity.ok().body(petitionService.isMyPetition(user, entityIdDto));
+        } catch (PetitionNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/sign")

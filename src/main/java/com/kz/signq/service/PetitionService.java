@@ -2,7 +2,7 @@ package com.kz.signq.service;
 
 import com.kz.signq.dto.EntityIdDto;
 import com.kz.signq.dto.petition.PetitionDto;
-import com.kz.signq.dto.petition.PetitionResponseDto;
+import com.kz.signq.dto.petition.response.PetitionResponseDto;
 import com.kz.signq.dto.petition.PetitionsDto;
 import com.kz.signq.exception.PetitionAlreadySignedByUserException;
 import com.kz.signq.exception.PetitionNotFoundException;
@@ -26,4 +26,6 @@ public interface PetitionService {
     String sign(User user, EntityIdDto entityIdDto) throws PetitionAlreadySignedByUserException, PetitionNotFoundException;
 
     PetitionsDto findSignedPetitions(User user);
+
+    PetitionResponseDto isMyPetition(User user, EntityIdDto dto) throws PetitionNotFoundException;
 }

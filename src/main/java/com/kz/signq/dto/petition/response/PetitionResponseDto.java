@@ -1,7 +1,9 @@
-package com.kz.signq.dto.petition;
+package com.kz.signq.dto.petition.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kz.signq.model.Petition;
+import jakarta.annotation.Nullable;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,19 +11,24 @@ import java.util.UUID;
 
 @Builder
 @Getter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PetitionResponseDto {
     @JsonProperty("id")
     private UUID id;
 
+    @Nullable
     @JsonProperty("title")
     private String title;
 
+    @Nullable
     @JsonProperty("body")
     private String body;
 
+    @Nullable
     @JsonProperty("agency")
     private String agency;
 
+    @Nullable
     @JsonProperty("is_owner")
     private Boolean isOwner;
 
