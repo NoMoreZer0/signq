@@ -52,7 +52,7 @@ public class PetitionServiceImpl implements PetitionService {
         petitions.forEach(petition -> {
             var isOwner = false;
             if (user != null) {
-                user.getId().equals(petition.getCreatedBy());
+                isOwner = user.getId().equals(petition.getCreatedBy());
             }
             allPetitions.add(
                     PetitionResponseDto.fromPetition(petition, isOwner)
@@ -68,9 +68,9 @@ public class PetitionServiceImpl implements PetitionService {
 
     @Override
     public EntityIdDto save(PetitionDto petitionDto) {
-       // var image = imageService.findById(petitionDto.getImageId());
+        var image = imageService.findById(petitionDto.getImageId());
         var petition = Petition.builder()
-         //       .img(image.get())
+                .img(image.orElse(null))
                 .title(petitionDto.getTitle())
                 .body(petitionDto.getBody())
                 .agency(petitionDto.getAgency())
