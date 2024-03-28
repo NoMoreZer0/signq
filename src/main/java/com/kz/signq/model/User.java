@@ -1,6 +1,7 @@
 package com.kz.signq.model;
 
 import com.kz.signq.model.base.BaseEntityAudit;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
@@ -26,9 +27,13 @@ public class User extends BaseEntityAudit implements UserDetails {
 
     private String email;
 
+    @Nullable
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     private String password;
+
+    private String iin;
 
     @Enumerated
     @Column(name = "role", nullable = false)

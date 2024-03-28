@@ -1,6 +1,7 @@
 package com.kz.signq.controller;
 
 import com.kz.signq.dto.EntityIdDto;
+import com.kz.signq.dto.eds.EdsDto;
 import com.kz.signq.dto.petition.PetitionDto;
 import com.kz.signq.exception.PetitionNotFoundException;
 import com.kz.signq.model.User;
@@ -74,6 +75,17 @@ public class PetitionController {
     public ResponseEntity<?> getSignedPetition() {
         var user = getCurrentUser();
         return ResponseEntity.ok().body(petitionService.findSignedPetitions(user));
+    }
+
+
+    @PostMapping("/signEds")
+    public ResponseEntity<?> signEds(@RequestBody EdsDto dto) {
+        var user = getCurrentUser();
+        try {
+            return ResponseEntity.ok().body(petitionService.signEds(dto, user));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
     }
 
     private User getCurrentUser() {
