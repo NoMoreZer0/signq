@@ -4,9 +4,9 @@ import com.kz.signq.db.UserDb;
 import com.kz.signq.exception.EmailAlreadyExistsException;
 import com.kz.signq.model.User;
 import com.kz.signq.service.CustomUserDetailsService;
+import com.kz.signq.utils.ErrorCodeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,10 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
     public User create(User user) throws EmailAlreadyExistsException {
         var opt = db.findUserByEmail(user.getEmail());
         if (opt.isPresent()) {
-            throw new EmailAlreadyExistsException("Пользователь с таким email уже существует");
+            throw new EmailAlreadyExistsException(
+                    ErrorCodeUtil.ERR_EMAIL_ALREADY_EXIST.name(),
+                    "Пользователь с таким email уже существует"
+            );
         }
         return save(user);
     }
@@ -42,11 +45,6 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
     @Override
     public UserDetailsService userDetailsService() {
         return this::getByUsername;
-    }
-
-    public User getCurrentUser() {
-        var username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return getByUsername(username);
     }
 
 }

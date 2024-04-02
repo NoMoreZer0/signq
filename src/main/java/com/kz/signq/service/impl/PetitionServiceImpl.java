@@ -16,6 +16,7 @@ import com.kz.signq.service.ImageService;
 import com.kz.signq.service.PetitionService;
 import com.kz.signq.service.SignatureService;
 import com.kz.signq.service.UserPetitionSignService;
+import com.kz.signq.utils.ErrorCodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,8 @@ public class PetitionServiceImpl implements PetitionService {
     private final UserPetitionSignService signService;
 
     private final SignatureService signatureService;
+
+    private static final String PETITION_NOT_FOUND_MSG = "petition not found!";
 
     @Autowired
     public PetitionServiceImpl(
@@ -96,7 +99,10 @@ public class PetitionServiceImpl implements PetitionService {
     public String sign(User user, EntityIdDto entityIdDto) throws PetitionAlreadySignedByUserException, PetitionNotFoundException {
         var petition = db.findById(entityIdDto.getId());
         if (petition.isEmpty()) {
-            throw new PetitionNotFoundException("Petition not found!");
+            throw new PetitionNotFoundException(
+                    ErrorCodeUtil.ERR_PETITION_NOT_FOUND.name(),
+                    PETITION_NOT_FOUND_MSG
+            );
         }
         signService.save(user, petition.get());
         return "signed successfully!";
@@ -112,7 +118,10 @@ public class PetitionServiceImpl implements PetitionService {
     public PetitionResponseDto isMyPetition(User user, EntityIdDto dto) throws PetitionNotFoundException {
         var opt = db.findById(dto.getId());
         if (opt.isEmpty()) {
-            throw new PetitionNotFoundException("petition not found");
+            throw new PetitionNotFoundException(
+                    ErrorCodeUtil.ERR_PETITION_NOT_FOUND.name(),
+                    PETITION_NOT_FOUND_MSG
+            );
         }
         var petition = opt.get();
         return PetitionResponseDto.builder()
@@ -124,7 +133,10 @@ public class PetitionServiceImpl implements PetitionService {
     public String signEds(EdsDto dto, User user) throws PetitionNotFoundException, SignException, NoSuchAlgorithmException {
         var opt = db.findById(dto.getPetitionId());
         if (opt.isEmpty()) {
-            throw new PetitionNotFoundException("petition not found");
+            throw new PetitionNotFoundException(
+                    ErrorCodeUtil.ERR_PETITION_NOT_FOUND.name(),
+                    PETITION_NOT_FOUND_MSG
+            );
         }
         var petition = opt.get();
         var certificateStore = dto.getCertificateStore();

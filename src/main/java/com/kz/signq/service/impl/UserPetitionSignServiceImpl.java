@@ -6,6 +6,7 @@ import com.kz.signq.model.Petition;
 import com.kz.signq.model.User;
 import com.kz.signq.model.UserPetitionSign;
 import com.kz.signq.service.UserPetitionSignService;
+import com.kz.signq.utils.ErrorCodeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,10 @@ public class UserPetitionSignServiceImpl implements UserPetitionSignService {
         log.info("{} trying to sign petition {}", user, petition);
         if (db.existsByUserAndPetition(user, petition)) {
             log.error("Petition {} already signed by the user", petition);
-            throw new PetitionAlreadySignedByUserException("Petition already signed by the user");
+            throw new PetitionAlreadySignedByUserException(
+                    ErrorCodeUtil.ERR_PETITION_ALREADY_SIGNED.name(),
+                    "Petition already signed by the user"
+            );
         }
         var userPetitionSign = UserPetitionSign.builder()
                                 .petition(petition)

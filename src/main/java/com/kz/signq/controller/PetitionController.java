@@ -6,6 +6,7 @@ import com.kz.signq.dto.petition.PetitionDto;
 import com.kz.signq.exception.PetitionNotFoundException;
 import com.kz.signq.model.User;
 import com.kz.signq.service.PetitionService;
+import com.kz.signq.utils.ErrorCodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -57,7 +58,7 @@ public class PetitionController {
             var user = getCurrentUser();
             return ResponseEntity.ok().body(petitionService.isMyPetition(user, entityIdDto));
         } catch (PetitionNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(ErrorCodeUtil.toExceptionDto(e));
         }
     }
 
@@ -67,7 +68,7 @@ public class PetitionController {
             var user = getCurrentUser();
             return ResponseEntity.ok().body(petitionService.sign(user, entityIdDto));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(ErrorCodeUtil.toExceptionDto(e));
         }
     }
 
@@ -84,7 +85,7 @@ public class PetitionController {
         try {
             return ResponseEntity.ok().body(petitionService.signEds(dto, user));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e);
+            return ResponseEntity.badRequest().body(ErrorCodeUtil.toExceptionDto(e));
         }
     }
 

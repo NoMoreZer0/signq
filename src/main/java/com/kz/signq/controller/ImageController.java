@@ -2,6 +2,7 @@ package com.kz.signq.controller;
 
 import com.kz.signq.dto.image.ImageDto;
 import com.kz.signq.service.ImageService;
+import com.kz.signq.utils.ErrorCodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +32,7 @@ public class ImageController {
             ImageDto imageDto = ImageDto.fromMultipartFile(file);
             return ResponseEntity.ok().body(imageService.saveImage(imageDto));
         } catch (IOException e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
+            return ResponseEntity.internalServerError().body(ErrorCodeUtil.toExceptionDto(e));
         }
     }
 }

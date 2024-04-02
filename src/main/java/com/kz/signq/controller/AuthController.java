@@ -3,6 +3,7 @@ package com.kz.signq.controller;
 import com.kz.signq.dto.authentication.LoginDto;
 import com.kz.signq.dto.authentication.RegisterDto;
 import com.kz.signq.service.AuthenticationService;
+import com.kz.signq.utils.ErrorCodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +28,7 @@ public class AuthController {
             var response = authenticationService.register(registerDto);
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(ErrorCodeUtil.toExceptionDto(e));
         }
     }
 
@@ -37,7 +38,7 @@ public class AuthController {
             var response = authenticationService.login(loginDto);
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(ErrorCodeUtil.toExceptionDto(e));
         }
     }
 }

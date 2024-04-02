@@ -1,7 +1,8 @@
 package com.kz.signq.exception;
 
-public class EmailAlreadyExistsException extends Exception {
-    public EmailAlreadyExistsException(String message) {
-        super(message);
+public class EmailAlreadyExistsException extends ErrorCodeException {
+
+    public EmailAlreadyExistsException(String errorCode, String message) {
+        super(errorCode, message);
     }
 }

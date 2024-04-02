@@ -4,6 +4,7 @@ import com.kz.signq.exception.SignException;
 import com.kz.signq.model.Petition;
 import com.kz.signq.model.User;
 import com.kz.signq.service.SignatureService;
+import com.kz.signq.utils.ErrorCodeUtil;
 import com.kz.signq.utils.SignatureCheckUtil;
 import com.kz.signq.utils.SignatureUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,11 +44,11 @@ public class SignatureServiceImpl implements SignatureService {
             encodedCertificate = certificate.getEncoded();
             sign = signatureUtil.signData(privateKey, dataSnapshot);
         } catch (Exception e) {
-            throw new SignException("ESP_ERROR_GENERAL_ERROR", e.getMessage());
+            throw new SignException(ErrorCodeUtil.ESP_ERROR_GENERAL_ERROR.name(), e.getMessage());
         }
         var iin = user.getIin();
         if (iin == null) {
-            throw new SignException("ESP_ERROR_IIN_NOT_FOUND", "У пользователя нету ИИН");
+            throw new SignException(ErrorCodeUtil.ESP_ERROR_IIN_NOT_FOUND.name(), "У пользователя нету ИИН");
         }
         signatureUtil.saveDigitalSignature(petition.getId(), iin, applicationData, encodedCertificate, sign);
     }
@@ -69,34 +70,34 @@ public class SignatureServiceImpl implements SignatureService {
             certificate = (X509Certificate) keyStore.getCertificate(alias);
             applicationData = signatureUtil.sha256BytesToHex(dataSnapshot);
         } catch (IOException e) {
-            throw new SignException("ESP_PASSWORD_INCORRECT", e.getMessage());
+            throw new SignException(ErrorCodeUtil.ESP_PASSWORD_INCORRECT.name(), e.getMessage());
         } catch (Exception e) {
-            throw new SignException("ESP_ERROR_GENERAL_ERROR", e.getMessage());
+            throw new SignException(ErrorCodeUtil.ESP_ERROR_GENERAL_ERROR.name(), e.getMessage());
         }
 
         var iin = user.getIin();
         if (iin == null) {
-            throw new SignException("ESP_ERROR_IIN_NOT_FOUND", "У пользователя нету ИИН");
+            throw new SignException(ErrorCodeUtil.ESP_ERROR_IIN_NOT_FOUND.name(), "У пользователя нету ИИН");
         }
 
         if (!signatureCheckUtil.checkSubjectIIN(certificate, iin)) {
-            throw new SignException("ESP_ERROR_IIN_MISMATCH", "ИИН подписанта не соответствует ИИН из хранилища");
+            throw new SignException(ErrorCodeUtil.ESP_ERROR_IIN_MISMATCH.name(), "ИИН подписанта не соответствует ИИН из хранилища");
         }
 
         if (signatureCheckUtil.checkExistence(applicationData, iin)) {
-            throw new SignException("ESP_ERROR_APPLICATION_ALREADY_SIGNED", "Петиция уже подписана заявителем");
+            throw new SignException(ErrorCodeUtil.ESP_ERROR_APPLICATION_ALREADY_SIGNED.name(), "Петиция уже подписана заявителем");
         }
 
         try {
             certificate.checkValidity();
         } catch (CertificateNotYetValidException e) {
-            throw new SignException("ESP_ERROR_CERTIFICATE_NOT_EFFECTIVE_YET", "Не наступил срок действия сертификата");
+            throw new SignException(ErrorCodeUtil.ESP_ERROR_CERTIFICATE_NOT_EFFECTIVE_YET.name(), "Не наступил срок действия сертификата");
         } catch (CertificateExpiredException e) {
-            throw new SignException("ESP_ERROR_CERTIFICATE_EXPIRED", "Истек срок действия сертификата");
+            throw new SignException(ErrorCodeUtil.ESP_ERROR_CERTIFICATE_EXPIRED.name(), "Истек срок действия сертификата");
         }
 
         if (!signatureCheckUtil.checkIssuer(certificate)) {
-            throw new SignException("ESP_ERROR_ISSUER_INVALID", "Издатель не является НУЦ");
+            throw new SignException(ErrorCodeUtil.ESP_ERROR_ISSUER_INVALID.name(), "Издатель не является НУЦ");
         }
     }
 
