@@ -2,6 +2,7 @@ package com.kz.signq.service.impl;
 
 import com.kz.signq.db.PetitionDb;
 import com.kz.signq.dto.EntityIdDto;
+import com.kz.signq.dto.MessageDto;
 import com.kz.signq.dto.eds.EdsDto;
 import com.kz.signq.dto.petition.PetitionDto;
 import com.kz.signq.dto.petition.response.PetitionResponseDto;
@@ -130,7 +131,7 @@ public class PetitionServiceImpl implements PetitionService {
     }
 
     @Override
-    public String signEds(EdsDto dto, User user) throws PetitionNotFoundException, SignException, NoSuchAlgorithmException {
+    public MessageDto signEds(EdsDto dto, User user) throws PetitionNotFoundException, SignException, NoSuchAlgorithmException {
         var opt = db.findById(dto.getPetitionId());
         if (opt.isEmpty()) {
             throw new PetitionNotFoundException(
@@ -144,7 +145,7 @@ public class PetitionServiceImpl implements PetitionService {
         byte[] dataSnapshot = signatureService.createDataSnapshot(petition);
         signatureService.checkCertificate(user, petition, dataSnapshot, certificateStore, password);
         signatureService.signApplication(user, petition, dataSnapshot, certificateStore, password);
-        return "signed successfully!";
+        return MessageDto.builder().msg("signed successfully!").build();
     }
 
     private PetitionsDto toPetitionsDto(List<UserPetitionSign> signs) {

@@ -1,6 +1,7 @@
 package com.kz.signq.service;
 
 import com.kz.signq.dto.EntityIdDto;
+import com.kz.signq.dto.MessageDto;
 import com.kz.signq.dto.eds.EdsDto;
 import com.kz.signq.dto.petition.PetitionDto;
 import com.kz.signq.dto.petition.response.PetitionResponseDto;
@@ -32,5 +33,5 @@ public interface PetitionService {
 
     PetitionResponseDto isMyPetition(User user, EntityIdDto dto) throws PetitionNotFoundException;
 
-    String signEds(EdsDto dto, User user) throws PetitionNotFoundException, SignException, NoSuchAlgorithmException;
+    MessageDto signEds(EdsDto dto, User user) throws PetitionNotFoundException, SignException, NoSuchAlgorithmException;
 }

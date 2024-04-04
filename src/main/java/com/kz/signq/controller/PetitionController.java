@@ -7,7 +7,7 @@ import com.kz.signq.exception.PetitionNotFoundException;
 import com.kz.signq.model.User;
 import com.kz.signq.service.PetitionService;
 import com.kz.signq.utils.ErrorCodeUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,14 +17,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/petition")
+@RequiredArgsConstructor
 public class PetitionController {
 
     private final PetitionService petitionService;
-
-    @Autowired
-    public PetitionController(PetitionService petitionService) {
-        this.petitionService = petitionService;
-    }
 
     @PostMapping
     public ResponseEntity<?> save(
