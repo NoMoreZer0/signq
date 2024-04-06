@@ -1,10 +1,12 @@
 package com.kz.signq.service;
 
 import com.kz.signq.exception.SignException;
+import com.kz.signq.model.DigitalSignature;
 import com.kz.signq.model.Petition;
 import com.kz.signq.model.User;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 public interface SignatureService {
     void signApplication(User user, Petition petition, byte[] dataSnapshot, String certificateStore, String password) throws SignException;
@@ -12,4 +14,6 @@ public interface SignatureService {
     void checkCertificate(User user, Petition petition, byte[] dataSnapshot, String certificateStore, String password) throws SignException;
 
     byte[] createDataSnapshot(Petition application) throws NoSuchAlgorithmException;
+
+    List<DigitalSignature> getAllSigned(String iin);
 }

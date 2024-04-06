@@ -1,13 +1,15 @@
 package com.kz.signq.service.impl;
 
+import com.kz.signq.db.DigitalSignatureDb;
 import com.kz.signq.exception.SignException;
+import com.kz.signq.model.DigitalSignature;
 import com.kz.signq.model.Petition;
 import com.kz.signq.model.User;
 import com.kz.signq.service.SignatureService;
 import com.kz.signq.utils.ErrorCodeUtil;
 import com.kz.signq.utils.SignatureCheckUtil;
 import com.kz.signq.utils.SignatureUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -16,19 +18,17 @@ import java.security.PrivateKey;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
+import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class SignatureServiceImpl implements SignatureService {
 
     private final SignatureUtil signatureUtil;
 
     private final SignatureCheckUtil signatureCheckUtil;
 
-    @Autowired
-    public SignatureServiceImpl(SignatureUtil signatureUtil, SignatureCheckUtil signatureCheckUtil) {
-        this.signatureUtil = signatureUtil;
-        this.signatureCheckUtil = signatureCheckUtil;
-    }
+    private final DigitalSignatureDb db;
 
     @Override
     public void signApplication(User user, Petition petition, byte[] dataSnapshot, String certificateStore, String password) throws SignException {
@@ -99,6 +99,11 @@ public class SignatureServiceImpl implements SignatureService {
         if (!signatureCheckUtil.checkIssuer(certificate)) {
             throw new SignException(ErrorCodeUtil.ESP_ERROR_ISSUER_INVALID.name(), "Издатель не является НУЦ");
         }
+    }
+
+    @Override
+    public List<DigitalSignature> getAllSigned(String iin) {
+        return db.findAllByUserIin(iin);
     }
 
     @Override

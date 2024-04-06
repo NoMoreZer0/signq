@@ -5,14 +5,14 @@ import com.kz.signq.dto.EntityIdDto;
 import com.kz.signq.dto.MessageDto;
 import com.kz.signq.dto.eds.EdsDto;
 import com.kz.signq.dto.petition.PetitionDto;
-import com.kz.signq.dto.petition.response.PetitionResponseDto;
 import com.kz.signq.dto.petition.PetitionsDto;
+import com.kz.signq.dto.petition.response.PetitionResponseDto;
 import com.kz.signq.exception.PetitionAlreadySignedByUserException;
 import com.kz.signq.exception.PetitionNotFoundException;
 import com.kz.signq.exception.SignException;
+import com.kz.signq.model.DigitalSignature;
 import com.kz.signq.model.Petition;
 import com.kz.signq.model.User;
-import com.kz.signq.model.UserPetitionSign;
 import com.kz.signq.service.ImageService;
 import com.kz.signq.service.PetitionService;
 import com.kz.signq.service.SignatureService;
@@ -111,8 +111,11 @@ public class PetitionServiceImpl implements PetitionService {
 
     @Override
     public PetitionsDto findSignedPetitions(User user) {
-        var userPetitions = signService.findAllSigned(user);
-        return toPetitionsDto(userPetitions);
+        if (user.getIin() == null) {
+            return toPetitionsDto(List.of());
+        }
+        var signatures = signatureService.getAllSigned(user.getIin());
+        return toPetitionsDto(signatures);
     }
 
     @Override
@@ -148,9 +151,12 @@ public class PetitionServiceImpl implements PetitionService {
         return MessageDto.builder().msg("signed successfully!").build();
     }
 
-    private PetitionsDto toPetitionsDto(List<UserPetitionSign> signs) {
+    private PetitionsDto toPetitionsDto(List<DigitalSignature> signatures) {
         var petitions = new ArrayList<Petition>();
-        signs.forEach(sign -> petitions.add(sign.getPetition()));
+        signatures.forEach(signature -> {
+            var p = db.findById(signature.getPetitionId());
+            p.ifPresent(petitions::add);
+        });
         return PetitionsDto.builder()
                 .petitions(petitions)
                 .build();
