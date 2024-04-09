@@ -18,11 +18,6 @@ public class Petition extends BaseEntityAudit {
 
     @Nullable
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "image_id", referencedColumnName = "id")
-    private Image img;
-
-    @Nullable
-    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "file_id", referencedColumnName = "id")
     private File file;
 

@@ -30,8 +30,6 @@ public class PetitionServiceImpl implements PetitionService {
 
     private final PetitionDb db;
 
-    private final ImageService imageService;
-
     private final UserPetitionSignService signService;
 
     private final SignatureService signatureService;
