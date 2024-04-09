@@ -13,8 +13,8 @@ public class PetitionDto {
     @JsonProperty("title")
     private String title;
 
-    @JsonProperty("image_id")
-    private UUID imageId;
+    @JsonProperty("file_id")
+    private UUID fileId;
 
     @JsonProperty("body")
     private String body;

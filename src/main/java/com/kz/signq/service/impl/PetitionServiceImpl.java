@@ -13,12 +13,9 @@ import com.kz.signq.exception.SignException;
 import com.kz.signq.model.DigitalSignature;
 import com.kz.signq.model.Petition;
 import com.kz.signq.model.User;
-import com.kz.signq.service.ImageService;
-import com.kz.signq.service.PetitionService;
-import com.kz.signq.service.SignatureService;
-import com.kz.signq.service.UserPetitionSignService;
+import com.kz.signq.service.*;
 import com.kz.signq.utils.ErrorCodeUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
@@ -28,6 +25,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class PetitionServiceImpl implements PetitionService {
 
     private final PetitionDb db;
@@ -38,20 +36,9 @@ public class PetitionServiceImpl implements PetitionService {
 
     private final SignatureService signatureService;
 
-    private static final String PETITION_NOT_FOUND_MSG = "petition not found!";
+    private final FileService fileService;
 
-    @Autowired
-    public PetitionServiceImpl(
-            PetitionDb db,
-            ImageService imageService,
-            UserPetitionSignService signService,
-            SignatureService signatureService
-    ) {
-        this.db = db;
-        this.imageService = imageService;
-        this.signService = signService;
-        this.signatureService = signatureService;
-    }
+    private static final String PETITION_NOT_FOUND_MSG = "petition not found!";
 
     @Override
     public PetitionsDto getCreatedPetitions(User user) {
@@ -84,9 +71,9 @@ public class PetitionServiceImpl implements PetitionService {
 
     @Override
     public EntityIdDto save(PetitionDto petitionDto) {
-        var image = imageService.findById(petitionDto.getImageId());
+        var file = fileService.findById(petitionDto.getFileId());
         var petition = Petition.builder()
-                .img(image.orElse(null))
+                .file(file.orElse(null))
                 .title(petitionDto.getTitle())
                 .body(petitionDto.getBody())
                 .agency(petitionDto.getAgency())
