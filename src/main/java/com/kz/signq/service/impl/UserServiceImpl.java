@@ -35,15 +35,11 @@ public class UserServiceImpl implements UserService {
                     "You have no permission to edit data!"
             );
         }
-        var editedUser = User.builder()
-                .iin(userDto.getIin())
-                .email(userDto.getEmail())
-                .name(userDto.getName())
-                .phoneNumber(userDto.getPhoneNumber())
-                .role(currentUser.getRole())
-                .build();
-        editedUser.setId(user.getId());
-        db.save(editedUser);
+        user.setIin(userDto.getIin());
+        user.setName(userDto.getName());
+        user.setEmail(userDto.getEmail());
+        user.setPhoneNumber(userDto.getPhoneNumber());
+        db.save(user);
         return MessageDto.builder().msg("Data edited successfully").build();
     }
 
