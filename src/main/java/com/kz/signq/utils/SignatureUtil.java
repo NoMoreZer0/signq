@@ -78,6 +78,10 @@ public class SignatureUtil {
         db.save(digitalSignature);
     }
 
+    public boolean hasSignature(String userIin) {
+        return db.existsByUserIin(userIin);
+    }
+
     public String objectToString(Object object) {
         var result = new StringBuilder();
         result.append(this.getClass().getName());

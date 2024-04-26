@@ -32,6 +32,7 @@ public class SignatureServiceImpl implements SignatureService {
 
     @Override
     public void signApplication(User user, Petition petition, byte[] dataSnapshot, String certificateStore, String password) throws SignException {
+
         String applicationData;
         byte[] encodedCertificate;
         byte[] sign;
@@ -49,6 +50,9 @@ public class SignatureServiceImpl implements SignatureService {
         var iin = user.getIin();
         if (iin == null) {
             throw new SignException(ErrorCodeUtil.ESP_ERROR_IIN_NOT_FOUND.name(), "У пользователя нету ИИН");
+        }
+        if (signatureUtil.hasSignature(iin)) {
+            throw new SignException(ErrorCodeUtil.ESP_ERROR_APPLICATION_ALREADY_SIGNED.name(), "Вы уже подписали эту петицию");
         }
         signatureUtil.saveDigitalSignature(petition.getId(), iin, applicationData, encodedCertificate, sign);
     }
