@@ -14,5 +14,5 @@ public interface DigitalSignatureDb extends JpaRepository<DigitalSignature, UUID
 
     List<DigitalSignature> findAllByUserIin(String userIIn);
 
-    boolean existsByUserIin(String userIin);
+    boolean existsByUserIinAndPetitionId(String userIin, UUID petitionId);
 }

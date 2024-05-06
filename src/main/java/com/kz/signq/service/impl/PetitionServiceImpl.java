@@ -35,6 +35,8 @@ public class PetitionServiceImpl implements PetitionService {
 
     private final FileService fileService;
 
+    private final PetitionStatusService petitionStatusService;
+
     private static final String PETITION_NOT_FOUND_MSG = "petition not found!";
 
     private static final String IMAGE_NOT_FOUND_MSG = "image not found!";
@@ -76,10 +78,11 @@ public class PetitionServiceImpl implements PetitionService {
                 .title(petitionDto.getTitle())
                 .body(petitionDto.getBody())
                 .agency(petitionDto.getAgency())
-                .status(PetitionStatus.DRAFT)
                 .build();
+        petition = db.save(petition);
+        petitionStatusService.init(petition.getId());
         return EntityIdDto.fromBaseEntity(
-                db.save(petition)
+                petition
         );
     }
 
@@ -162,6 +165,7 @@ public class PetitionServiceImpl implements PetitionService {
         byte[] dataSnapshot = signatureService.createDataSnapshot(petition);
         signatureService.checkCertificate(user, petition, dataSnapshot, certificateStore, password);
         signatureService.signApplication(user, petition, dataSnapshot, certificateStore, password);
+        petitionStatusService.process(dto.getPetitionId());
         return MessageDto.builder().msg("signed successfully!").build();
     }
 

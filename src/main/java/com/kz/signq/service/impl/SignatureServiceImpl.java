@@ -51,7 +51,7 @@ public class SignatureServiceImpl implements SignatureService {
         if (iin == null) {
             throw new SignException(ErrorCodeUtil.ESP_ERROR_IIN_NOT_FOUND.name(), "У пользователя нету ИИН");
         }
-        if (signatureUtil.hasSignature(iin)) {
+        if (signatureUtil.hasSignature(iin, petition.getId())) {
             throw new SignException(ErrorCodeUtil.ESP_ERROR_APPLICATION_ALREADY_SIGNED.name(), "Вы уже подписали эту петицию");
         }
         signatureUtil.saveDigitalSignature(petition.getId(), iin, applicationData, encodedCertificate, sign);

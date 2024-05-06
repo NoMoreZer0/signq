@@ -78,8 +78,8 @@ public class SignatureUtil {
         db.save(digitalSignature);
     }
 
-    public boolean hasSignature(String userIin) {
-        return db.existsByUserIin(userIin);
+    public boolean hasSignature(String userIin, UUID petitionId) {
+        return db.existsByUserIinAndPetitionId(userIin, petitionId);
     }
 
     public String objectToString(Object object) {
