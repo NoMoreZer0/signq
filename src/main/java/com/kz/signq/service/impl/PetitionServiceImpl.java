@@ -14,14 +14,12 @@ import com.kz.signq.exception.SignException;
 import com.kz.signq.model.*;
 import com.kz.signq.service.*;
 import com.kz.signq.utils.ErrorCodeUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +39,8 @@ public class PetitionServiceImpl implements PetitionService {
 
     private static final String IMAGE_NOT_FOUND_MSG = "image not found!";
 
+    private static final List<PetitionStatus> statuses = List.of(PetitionStatus.PUBLISH, PetitionStatus.ACCEPT); // List of statuses for publishing
+
     @Override
     public PetitionsDto getCreatedPetitions(User user) {
         var petitions = db.findAllByCreatedBy(user.getId());
@@ -50,8 +50,9 @@ public class PetitionServiceImpl implements PetitionService {
     }
 
     @Override
+    @Transactional
     public List<PetitionResponseDto> getAll(User user) {
-        var petitions = db.findAll();
+        var petitions = db.findAllByStatusIn(statuses);
         var allPetitions = new ArrayList<PetitionResponseDto>();
         petitions.forEach(petition -> {
             var isOwner = false;
