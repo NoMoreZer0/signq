@@ -7,12 +7,11 @@ import com.kz.signq.dto.eds.EdsDto;
 import com.kz.signq.dto.petition.PetitionDto;
 import com.kz.signq.dto.petition.PetitionsDto;
 import com.kz.signq.dto.petition.response.PetitionResponseDto;
+import com.kz.signq.exception.EntityNotFoundException;
 import com.kz.signq.exception.PetitionAlreadySignedByUserException;
 import com.kz.signq.exception.PetitionNotFoundException;
 import com.kz.signq.exception.SignException;
-import com.kz.signq.model.DigitalSignature;
-import com.kz.signq.model.Petition;
-import com.kz.signq.model.User;
+import com.kz.signq.model.*;
 import com.kz.signq.service.*;
 import com.kz.signq.utils.ErrorCodeUtil;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +36,8 @@ public class PetitionServiceImpl implements PetitionService {
     private final FileService fileService;
 
     private static final String PETITION_NOT_FOUND_MSG = "petition not found!";
+
+    private static final String IMAGE_NOT_FOUND_MSG = "image not found!";
 
     @Override
     public PetitionsDto getCreatedPetitions(User user) {
@@ -68,14 +69,42 @@ public class PetitionServiceImpl implements PetitionService {
     }
 
     @Override
-    public EntityIdDto save(PetitionDto petitionDto) {
+    public EntityIdDto create(PetitionDto petitionDto) {
         var file = fileService.findById(petitionDto.getFileId());
         var petition = Petition.builder()
                 .file(file.orElse(null))
                 .title(petitionDto.getTitle())
                 .body(petitionDto.getBody())
                 .agency(petitionDto.getAgency())
+                .status(PetitionStatus.DRAFT)
                 .build();
+        return EntityIdDto.fromBaseEntity(
+                db.save(petition)
+        );
+    }
+
+    @Override
+    public EntityIdDto update(PetitionDto petitionDto, UUID petitionId) throws EntityNotFoundException {
+        var opt = db.findById(petitionId);
+        if (opt.isEmpty()) {
+            throw new EntityNotFoundException(
+                    ErrorCodeUtil.ERR_ENTITY_NOT_FOUND.name(),
+                    PETITION_NOT_FOUND_MSG
+            );
+        }
+        var petition = opt.get();
+        File image = null;
+        if (petitionDto.getFileId() != null) {
+            var optFile = fileService.findById(petitionDto.getFileId());
+            if (optFile.isEmpty()) {
+                throw new EntityNotFoundException(
+                        ErrorCodeUtil.ERR_ENTITY_NOT_FOUND.name(),
+                        IMAGE_NOT_FOUND_MSG
+                );
+            }
+            image = optFile.orElse(null);
+        }
+        petition.updateByDto(petitionDto, image);
         return EntityIdDto.fromBaseEntity(
                 db.save(petition)
         );

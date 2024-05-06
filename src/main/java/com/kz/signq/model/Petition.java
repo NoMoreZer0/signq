@@ -1,5 +1,6 @@
 package com.kz.signq.model;
 
+import com.kz.signq.dto.petition.PetitionDto;
 import com.kz.signq.model.base.BaseEntityAudit;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
@@ -25,4 +26,22 @@ public class Petition extends BaseEntityAudit {
     private String body;
 
     private String agency;
+
+    @Enumerated(value = EnumType.STRING)
+    private PetitionStatus status;
+
+    public void updateByDto(PetitionDto petitionDto, @Nullable File file) {
+        if (petitionDto.getBody() != null) {
+            this.body = petitionDto.getBody();
+        }
+        if (petitionDto.getAgency() != null) {
+            this.agency = petitionDto.getAgency();
+        }
+        if (petitionDto.getTitle() != null) {
+            this.title = petitionDto.getTitle();
+        }
+        if (file != null) {
+            this.file = file;
+        }
+    }
 }

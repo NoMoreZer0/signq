@@ -6,6 +6,7 @@ import com.kz.signq.dto.eds.EdsDto;
 import com.kz.signq.dto.petition.PetitionDto;
 import com.kz.signq.dto.petition.response.PetitionResponseDto;
 import com.kz.signq.dto.petition.PetitionsDto;
+import com.kz.signq.exception.EntityNotFoundException;
 import com.kz.signq.exception.PetitionAlreadySignedByUserException;
 import com.kz.signq.exception.PetitionNotFoundException;
 import com.kz.signq.exception.SignException;
@@ -23,7 +24,9 @@ public interface PetitionService {
 
     Optional<Petition> getById(UUID id);
 
-    EntityIdDto save(PetitionDto petitionDto);
+    EntityIdDto create(PetitionDto petitionDto);
+
+    EntityIdDto update(PetitionDto petitionDto, UUID petitionId) throws EntityNotFoundException;
 
     PetitionsDto getCreatedPetitions(User user);
 
