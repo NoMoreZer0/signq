@@ -21,6 +21,7 @@ public class Petition extends BaseEntityAudit {
     @JoinColumn(name = "file_id", referencedColumnName = "id")
     private File file;
 
+    @Lob
     private String body;
 
     private String agency;
