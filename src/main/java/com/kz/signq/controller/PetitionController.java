@@ -10,6 +10,7 @@ import com.kz.signq.exception.PetitionNotFoundException;
 import com.kz.signq.model.Petition;
 import com.kz.signq.model.User;
 import com.kz.signq.service.PetitionService;
+import com.kz.signq.service.PetitionStatusService;
 import com.kz.signq.utils.ErrorCodeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,8 @@ import java.util.UUID;
 public class PetitionController {
 
     private final PetitionService petitionService;
+
+    private final PetitionStatusService petitionStatusService;
 
     @PostMapping
     public ResponseEntity<EntityIdDto> create(
@@ -97,6 +100,16 @@ public class PetitionController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(ErrorCodeUtil.toExceptionDto(e));
         }
+    }
+
+    @PostMapping("/process")
+    public ResponseEntity<?> process(@RequestParam("petition_id") UUID petitionId) {
+        return ResponseEntity.ok().body(petitionStatusService.process(petitionId));
+    }
+
+    @PostMapping("/reject")
+    public ResponseEntity<?> reject(@RequestParam("petition_id") UUID petitionId) {
+        return ResponseEntity.ok().body(petitionStatusService.reject(petitionId));
     }
 
     private User getCurrentUser() {

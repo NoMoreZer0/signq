@@ -1,6 +1,7 @@
 package com.kz.signq.service.impl;
 
 import com.kz.signq.db.PetitionDb;
+import com.kz.signq.dto.MessageDto;
 import com.kz.signq.model.PetitionStatus;
 import com.kz.signq.service.PetitionStatusService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class PetitionStatusServiceImpl implements PetitionStatusService {
     }
 
     @Override
-    public void process(UUID petitionId) {
+    public MessageDto process(UUID petitionId) {
         var petition = db.findById(petitionId).orElse(null);
         if (petition != null) {
             switch (petition.getStatus()) {
@@ -38,10 +39,13 @@ public class PetitionStatusServiceImpl implements PetitionStatusService {
             }
             db.save(petition);
         }
+        return MessageDto.builder()
+                .msg("SUCCESS!")
+                .build();
     }
 
     @Override
-    public void reject(UUID petitionId) {
+    public MessageDto reject(UUID petitionId) {
         var petition = db.findById(petitionId).orElse(null);
         if (petition != null) {
             switch (petition.getStatus()) {
@@ -51,5 +55,9 @@ public class PetitionStatusServiceImpl implements PetitionStatusService {
             }
             db.save(petition);
         }
+        return MessageDto
+                .builder()
+                .msg("REJECT!")
+                .build();
     }
 }
