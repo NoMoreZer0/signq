@@ -44,6 +44,7 @@ public class PetitionServiceImpl implements PetitionService {
     private static final List<PetitionStatus> statuses = List.of(PetitionStatus.PUBLISH, PetitionStatus.ACCEPT); // List of statuses for publishing
 
     @Override
+    @Transactional
     public PetitionsDto getCreatedPetitions(User user) {
         var petitions = db.findAllByCreatedBy(user.getId());
         return PetitionsDto.builder()
