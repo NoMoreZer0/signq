@@ -16,6 +16,8 @@ import com.kz.signq.service.*;
 import com.kz.signq.utils.ErrorCodeUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
@@ -51,8 +53,9 @@ public class PetitionServiceImpl implements PetitionService {
 
     @Override
     @Transactional
-    public List<PetitionResponseDto> getAll(User user) {
-        var petitions = db.findAllByStatusIn(statuses);
+    public List<PetitionResponseDto> getAll(User user, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        var petitions = db.findAllByStatusIn(statuses, pageable);
         var allPetitions = new ArrayList<PetitionResponseDto>();
         petitions.forEach(petition -> {
             var isOwner = false;

@@ -37,6 +37,10 @@ public class PetitionResponseDto {
     @JsonProperty("status")
     private PetitionStatus status;
 
+    @Nullable
+    @JsonProperty("file_id")
+    private UUID fileId;
+
     public static PetitionResponseDto fromPetition(Petition petition, boolean isOwner) {
         return PetitionResponseDto.builder()
                 .id(petition.getId())
@@ -45,6 +49,7 @@ public class PetitionResponseDto {
                 .agency(petition.getAgency())
                 .isOwner(isOwner)
                 .status(petition.getStatus())
+                .fileId(petition.getFile() != null ? petition.getFile().getId() : null)
                 .build();
     }
 }

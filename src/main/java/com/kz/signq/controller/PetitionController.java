@@ -47,9 +47,12 @@ public class PetitionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PetitionResponseDto>> getAll() {
+    public ResponseEntity<List<PetitionResponseDto>> getAll(
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "size", defaultValue = "10", required = false) int size
+    ) {
         var user = getCurrentUser();
-        return ResponseEntity.ok().body(petitionService.getAll(user));
+        return ResponseEntity.ok().body(petitionService.getAll(user, page, size));
     }
 
     @GetMapping("/{id}")

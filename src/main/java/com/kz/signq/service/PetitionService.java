@@ -20,7 +20,7 @@ import java.util.UUID;
 
 public interface PetitionService {
 
-    List<PetitionResponseDto> getAll(User user);
+    List<PetitionResponseDto> getAll(User user, int page, int size);
 
     Optional<Petition> getById(UUID id);
 
