@@ -1,0 +1,31 @@
+version: '3.8'
+
+name: "singq"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app
+    depends_on:
+      - db
+    environment:
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=marjan-lms
+      - JWT_SECRET_KEY=b5ebd2e57d95932a503d8b6475130c11716fd25bed5dfef4839544da34cda50f
+    ports:
+      - "8080:8080"
+
+  db:
+    image: postgres:11.7
+    container_name: db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=marjan-lms
+    ports:
+      - "5433:5432"

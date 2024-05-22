@@ -4,10 +4,10 @@ import com.kz.signq.dto.EntityIdDto;
 import com.kz.signq.dto.MessageDto;
 import com.kz.signq.dto.eds.EdsDto;
 import com.kz.signq.dto.petition.PetitionDto;
-import com.kz.signq.dto.petition.response.PetitionResponseDto;
 import com.kz.signq.dto.petition.PetitionsDto;
+import com.kz.signq.dto.petition.response.PetitionResponseDto;
+import com.kz.signq.dto.signature.SignXmlDto;
 import com.kz.signq.exception.EntityNotFoundException;
-import com.kz.signq.exception.PetitionAlreadySignedByUserException;
 import com.kz.signq.exception.PetitionNotFoundException;
 import com.kz.signq.exception.SignException;
 import com.kz.signq.model.Petition;
@@ -30,11 +30,11 @@ public interface PetitionService {
 
     PetitionsDto getCreatedPetitions(User user);
 
-    String sign(User user, EntityIdDto entityIdDto) throws PetitionAlreadySignedByUserException, PetitionNotFoundException;
-
     PetitionsDto findSignedPetitions(User user);
 
     PetitionResponseDto isMyPetition(User user, EntityIdDto dto) throws PetitionNotFoundException;
 
     MessageDto signEds(EdsDto dto, User user) throws PetitionNotFoundException, SignException, NoSuchAlgorithmException;
+
+    MessageDto signXml(SignXmlDto dto, User user) throws SignException;
 }

@@ -1,8 +1,10 @@
 package com.kz.signq.utils;
 
 import com.kz.signq.db.DigitalSignatureDb;
+import com.kz.signq.db.DigitalSignatureXmlDb;
 import com.kz.signq.model.DigitalSignature;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.kz.signq.model.DigitalSignatureXml;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
@@ -14,14 +16,11 @@ import java.security.cert.CertificateException;
 import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class SignatureUtil {
 
     private final DigitalSignatureDb db;
-
-    @Autowired
-    public SignatureUtil(DigitalSignatureDb db) {
-        this.db = db;
-    }
+    private final DigitalSignatureXmlDb dbXml;
 
     public byte[] dataToSha256Bytes(String data) throws NoSuchAlgorithmException {
         var digest = MessageDigest.getInstance("SHA-256");
@@ -78,8 +77,22 @@ public class SignatureUtil {
         db.save(digitalSignature);
     }
 
+    public void saveDigitalSignatureXml(UUID petitionId, String userIin, String signature) {
+        var digitalSignature = DigitalSignatureXml.builder()
+                .petitionId(petitionId)
+                .dateTime(new Date())
+                .userIin(userIin)
+                .signature(signature)
+                .build();
+        dbXml.save(digitalSignature);
+    }
+
     public boolean hasSignature(String userIin, UUID petitionId) {
         return db.existsByUserIinAndPetitionId(userIin, petitionId);
+    }
+
+    public boolean hasSignatureXml(String userIin, UUID petitionId) {
+        return dbXml.existsByUserIinAndPetitionId(userIin, petitionId);
     }
 
     public String objectToString(Object object) {

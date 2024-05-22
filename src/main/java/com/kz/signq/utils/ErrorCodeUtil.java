@@ -15,9 +15,11 @@ public enum ErrorCodeUtil {
     ESP_ERROR_CERTIFICATE_NOT_EFFECTIVE_YET,
     ESP_ERROR_CERTIFICATE_EXPIRED,
     ESP_ERROR_ISSUER_INVALID,
+    ESP_ERROR_CERTIFICATE_NOT_VALID,
     ERR_USER_NOT_FOUND,
     ERR_NO_PERMISSION,
-    ERR_ENTITY_NOT_FOUND;
+    ERR_ENTITY_NOT_FOUND,
+    ERR_SERVER_PROBLEM;
 
     public static ExceptionDto toExceptionDto(Exception exception) {
         if (exception instanceof ErrorCodeException e) {

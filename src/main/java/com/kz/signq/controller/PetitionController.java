@@ -5,6 +5,7 @@ import com.kz.signq.dto.eds.EdsDto;
 import com.kz.signq.dto.petition.PetitionDto;
 import com.kz.signq.dto.petition.PetitionsDto;
 import com.kz.signq.dto.petition.response.PetitionResponseDto;
+import com.kz.signq.dto.signature.SignXmlDto;
 import com.kz.signq.exception.EntityNotFoundException;
 import com.kz.signq.exception.PetitionNotFoundException;
 import com.kz.signq.model.Petition;
@@ -78,16 +79,6 @@ public class PetitionController {
         }
     }
 
-    @PostMapping("/sign")
-    public ResponseEntity<?> sign(@RequestBody EntityIdDto entityIdDto) {
-        try {
-            var user = getCurrentUser();
-            return ResponseEntity.ok().body(petitionService.sign(user, entityIdDto));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(ErrorCodeUtil.toExceptionDto(e));
-        }
-    }
-
     @GetMapping("/signed")
     public ResponseEntity<PetitionsDto> getSignedPetition() {
         var user = getCurrentUser();
@@ -100,6 +91,16 @@ public class PetitionController {
         var user = getCurrentUser();
         try {
             return ResponseEntity.ok().body(petitionService.signEds(dto, user));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(ErrorCodeUtil.toExceptionDto(e));
+        }
+    }
+
+    @PostMapping("/signXml")
+    public ResponseEntity<?> signXml(@RequestBody SignXmlDto signXmlDto) {
+        var user = getCurrentUser();
+        try {
+            return ResponseEntity.ok().body(petitionService.signXml(signXmlDto, user));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(ErrorCodeUtil.toExceptionDto(e));
         }

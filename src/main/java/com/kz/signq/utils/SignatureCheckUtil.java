@@ -1,22 +1,18 @@
 package com.kz.signq.utils;
 
 import com.kz.signq.db.DigitalSignatureDb;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.security.cert.X509Certificate;
 
 @Component
+@RequiredArgsConstructor
 public class SignatureCheckUtil {
 
     private static final String ISSUER = "ҰЛТТЫҚ КУӘЛАНДЫРУШЫ ОРТАЛЫҚ (RSA)";
 
     private final DigitalSignatureDb db;
-
-    @Autowired
-    public SignatureCheckUtil(DigitalSignatureDb db) {
-        this.db = db;
-    }
 
     public boolean checkExistence(String data, String userIin) {
         var opt = db.findByData(data);
@@ -34,11 +30,20 @@ public class SignatureCheckUtil {
         return iin.equals(userIin);
     }
 
+    public boolean checkSubjectIIN(String iin, String userIin) {
+        return iin.equals(userIin);
+    }
+
     public boolean checkIssuer(X509Certificate certificate) {
         String issuerDN = certificate.getIssuerX500Principal().getName();
         String commonName = findAttribute(issuerDN, "CN");
         return ISSUER.equals(commonName);
     }
+
+    public boolean checkIssuer(String commonName) {
+        return ISSUER.equals(commonName);
+    }
+
 
     private String findAttribute(String dn, String attributeType) {
         var dnSplits = dn.split(",");

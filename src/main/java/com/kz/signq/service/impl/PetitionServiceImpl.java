@@ -7,8 +7,8 @@ import com.kz.signq.dto.eds.EdsDto;
 import com.kz.signq.dto.petition.PetitionDto;
 import com.kz.signq.dto.petition.PetitionsDto;
 import com.kz.signq.dto.petition.response.PetitionResponseDto;
+import com.kz.signq.dto.signature.SignXmlDto;
 import com.kz.signq.exception.EntityNotFoundException;
-import com.kz.signq.exception.PetitionAlreadySignedByUserException;
 import com.kz.signq.exception.PetitionNotFoundException;
 import com.kz.signq.exception.SignException;
 import com.kz.signq.model.*;
@@ -21,15 +21,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class PetitionServiceImpl implements PetitionService {
 
     private final PetitionDb db;
-
-    private final UserPetitionSignService signService;
 
     private final SignatureService signatureService;
 
@@ -119,19 +120,6 @@ public class PetitionServiceImpl implements PetitionService {
     }
 
     @Override
-    public String sign(User user, EntityIdDto entityIdDto) throws PetitionAlreadySignedByUserException, PetitionNotFoundException {
-        var petition = db.findById(entityIdDto.getId());
-        if (petition.isEmpty()) {
-            throw new PetitionNotFoundException(
-                    ErrorCodeUtil.ERR_PETITION_NOT_FOUND.name(),
-                    PETITION_NOT_FOUND_MSG
-            );
-        }
-        signService.save(user, petition.get());
-        return "signed successfully!";
-    }
-
-    @Override
     public PetitionsDto findSignedPetitions(User user) {
         if (user.getIin() == null) {
             return toPetitionsDto(List.of());
@@ -172,6 +160,16 @@ public class PetitionServiceImpl implements PetitionService {
         signatureService.signApplication(user, petition, dataSnapshot, certificateStore, password);
         petitionStatusService.process(dto.getPetitionId());
         return MessageDto.builder().msg("signed successfully!").build();
+    }
+
+    @Override
+    public MessageDto signXml(SignXmlDto dto, User user) throws SignException {
+        var signature = signatureService.checkCertificateXml(user, dto.getPetitionId(), dto.getXml());
+        signatureService.saveSignatureXml(user.getIin(), dto.getPetitionId(), signature);
+        petitionStatusService.process(dto.getPetitionId());
+        return MessageDto.builder()
+                .msg("Успешно подписано")
+                .build();
     }
 
     private PetitionsDto toPetitionsDto(List<DigitalSignature> signatures) {
