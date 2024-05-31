@@ -1,24 +1,24 @@
 package com.kz.signq.controller;
 
 import com.kz.signq.dto.EntityIdDto;
+import com.kz.signq.dto.MessageDto;
 import com.kz.signq.dto.eds.EdsDto;
 import com.kz.signq.dto.petition.PetitionDto;
 import com.kz.signq.dto.petition.PetitionsDto;
 import com.kz.signq.dto.petition.response.PetitionResponseDto;
 import com.kz.signq.dto.signature.SignXmlDto;
-import com.kz.signq.exception.EntityNotFoundException;
 import com.kz.signq.exception.PetitionNotFoundException;
+import com.kz.signq.exception.SignException;
 import com.kz.signq.model.Petition;
 import com.kz.signq.model.User;
 import com.kz.signq.service.PetitionService;
-import com.kz.signq.service.PetitionStatusService;
-import com.kz.signq.utils.ErrorCodeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,22 +29,14 @@ public class PetitionController {
 
     private final PetitionService petitionService;
 
-    private final PetitionStatusService petitionStatusService;
-
     @PostMapping
-    public ResponseEntity<EntityIdDto> create(
-            @RequestBody PetitionDto petitionDto
-    ) {
+    public ResponseEntity<EntityIdDto> create(@RequestBody PetitionDto petitionDto) {
         return ResponseEntity.ok().body(petitionService.create(petitionDto));
     }
 
     @PatchMapping("/{petitionId}")
-    public ResponseEntity<?> update(@RequestBody PetitionDto dto, @PathVariable UUID petitionId) {
-        try {
-            return ResponseEntity.ok().body(petitionService.update(dto, petitionId));
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.badRequest().body(ErrorCodeUtil.toExceptionDto(e));
-        }
+    public ResponseEntity<EntityIdDto> update(@RequestBody PetitionDto dto, @PathVariable UUID petitionId) {
+        return ResponseEntity.ok().body(petitionService.update(dto, petitionId));
     }
 
     @GetMapping
@@ -70,13 +62,9 @@ public class PetitionController {
     }
 
     @PostMapping("/isMy")
-    public ResponseEntity<?> isMyPetition(@RequestBody EntityIdDto entityIdDto) {
-        try {
-            var user = getCurrentUser();
-            return ResponseEntity.ok().body(petitionService.isMyPetition(user, entityIdDto));
-        } catch (PetitionNotFoundException e) {
-            return ResponseEntity.badRequest().body(ErrorCodeUtil.toExceptionDto(e));
-        }
+    public ResponseEntity<PetitionResponseDto> isMyPetition(@RequestBody EntityIdDto entityIdDto) {
+        var user = getCurrentUser();
+        return ResponseEntity.ok().body(petitionService.isMyPetition(user, entityIdDto));
     }
 
     @GetMapping("/signed")
@@ -87,33 +75,15 @@ public class PetitionController {
 
 
     @PostMapping("/signEds")
-    public ResponseEntity<?> signEds(@RequestBody EdsDto dto) {
+    public ResponseEntity<?> signEds(@RequestBody EdsDto dto) throws PetitionNotFoundException, NoSuchAlgorithmException, SignException {
         var user = getCurrentUser();
-        try {
-            return ResponseEntity.ok().body(petitionService.signEds(dto, user));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(ErrorCodeUtil.toExceptionDto(e));
-        }
+        return ResponseEntity.ok().body(petitionService.signEds(dto, user));
     }
 
     @PostMapping("/signXml")
-    public ResponseEntity<?> signXml(@RequestBody SignXmlDto signXmlDto) {
+    public ResponseEntity<MessageDto> signXml(@RequestBody SignXmlDto signXmlDto) {
         var user = getCurrentUser();
-        try {
-            return ResponseEntity.ok().body(petitionService.signXml(signXmlDto, user));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(ErrorCodeUtil.toExceptionDto(e));
-        }
-    }
-
-    @PostMapping("/process")
-    public ResponseEntity<?> process(@RequestParam("petition_id") UUID petitionId) {
-        return ResponseEntity.ok().body(petitionStatusService.process(petitionId));
-    }
-
-    @PostMapping("/reject")
-    public ResponseEntity<?> reject(@RequestParam("petition_id") UUID petitionId) {
-        return ResponseEntity.ok().body(petitionStatusService.reject(petitionId));
+        return ResponseEntity.ok().body(petitionService.signXml(signXmlDto, user));
     }
 
     private User getCurrentUser() {

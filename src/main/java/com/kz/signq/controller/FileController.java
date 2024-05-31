@@ -1,14 +1,13 @@
 package com.kz.signq.controller;
 
+import com.kz.signq.dto.EntityIdDto;
 import com.kz.signq.service.FileService;
-import com.kz.signq.utils.ErrorCodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.UUID;
 
 @RestController
@@ -23,22 +22,14 @@ public class FileController {
     }
 
     @PostMapping
-    public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file) {
-        try {
-            return ResponseEntity.ok().body(fileService.uploadFile(file));
-        } catch (IOException e) {
-            return ResponseEntity.internalServerError().body(ErrorCodeUtil.toExceptionDto(e));
-        }
+    public ResponseEntity<EntityIdDto> upload(@RequestParam("file") MultipartFile file) {
+        return ResponseEntity.ok().body(fileService.uploadFile(file));
     }
 
     @GetMapping("/{fileId}")
-    public ResponseEntity<?> download(@PathVariable UUID fileId) {
-        try {
-            return ResponseEntity.ok()
-                    .contentType(MediaType.valueOf("image/png"))
-                    .body(fileService.downloadFileFromId(fileId));
-        } catch (IOException e) {
-            return ResponseEntity.internalServerError().body(ErrorCodeUtil.toExceptionDto(e));
-        }
+    public ResponseEntity<byte[]> download(@PathVariable UUID fileId) {
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf("image/png"))
+                .body(fileService.downloadFileFromId(fileId));
     }
 }

@@ -15,7 +15,7 @@ services:
       - DB_PASSWORD=postgres
       - DB_HOST=db
       - DB_PORT=5432
-      - DB_NAME=marjan-lms
+      - DB_NAME=signq-db
       - JWT_SECRET_KEY=b5ebd2e57d95932a503d8b6475130c11716fd25bed5dfef4839544da34cda50f
     ports:
       - "8080:8080"

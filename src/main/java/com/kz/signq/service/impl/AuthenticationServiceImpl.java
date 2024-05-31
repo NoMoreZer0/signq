@@ -42,7 +42,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .name(registerDto.getName())
                 .email(registerDto.getEmail())
                 .password(passwordEncoder.encode(registerDto.getPassword()))
-                .role(Role.ROLE_USER)
+                .role(Role.USER)
                 .build();
 
         customUserDetailsService.create(user);

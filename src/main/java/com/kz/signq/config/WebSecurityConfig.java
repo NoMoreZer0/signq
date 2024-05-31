@@ -50,6 +50,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/swagger-ui/**", "/swagger-resources/*", "/v3/api-docs/**").permitAll()
                 .requestMatchers(HttpMethod.GET,"/petition/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/file/*").permitAll()
+                .requestMatchers("/admin/**").hasRole("MANAGER")
                 .anyRequest().authenticated()
             )
             .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))

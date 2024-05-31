@@ -2,6 +2,7 @@ package com.kz.signq.service.impl;
 
 import com.kz.signq.db.FileDb;
 import com.kz.signq.dto.EntityIdDto;
+import com.kz.signq.exception.ErrorCodeException;
 import com.kz.signq.model.File;
 import com.kz.signq.service.FileService;
 import lombok.RequiredArgsConstructor;
@@ -24,14 +25,18 @@ public class FileServiceImpl implements FileService {
     private String folderPath;
 
     @Override
-    public EntityIdDto uploadFile(MultipartFile file) throws IOException {
+    public EntityIdDto uploadFile(MultipartFile file) throws ErrorCodeException {
         var filePath = String.format("%s/%s", folderPath, file.getOriginalFilename());
         var savedFile = db.save(File.builder()
                 .name(file.getOriginalFilename())
                 .type(file.getContentType())
                 .filePath(filePath).build()
         );
-        file.transferTo(new java.io.File(filePath));
+        try {
+            file.transferTo(new java.io.File(filePath));
+        } catch (IOException e) {
+            throw new ErrorCodeException("SERVER_ERROR", e.getMessage());
+        }
         return EntityIdDto.fromBaseEntity(savedFile);
     }
 
@@ -41,12 +46,16 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public byte[] downloadFileFromId(UUID id) throws IOException {
+    public byte[] downloadFileFromId(UUID id) throws ErrorCodeException {
         var opt = db.findById(id);
         if (opt.isEmpty()) {
             return new byte[0];
         }
         var filePath = opt.get().getFilePath();
-        return Files.readAllBytes(new java.io.File(filePath).toPath());
+        try {
+            return Files.readAllBytes(new java.io.File(filePath).toPath());
+        } catch (IOException e) {
+            throw new ErrorCodeException("SERVER_ERROR", e.getMessage());
+        }
     }
 }
