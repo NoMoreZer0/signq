@@ -59,15 +59,9 @@ public class PetitionServiceImpl implements PetitionService {
         Pageable pageable = PageRequest.of(page, size);
         var petitions = db.findAllByStatusIn(statuses, pageable);
         var allPetitions = new ArrayList<PetitionResponseDto>();
-        petitions.forEach(petition -> {
-            var isOwner = false;
-            if (user != null) {
-                isOwner = user.getId().equals(petition.getCreatedBy());
-            }
-            allPetitions.add(
-                    PetitionResponseDto.fromPetition(petition, isOwner)
-            );
-        });
+        petitions.forEach(petition -> allPetitions.add(
+                PetitionResponseDto.fromPetition(petition)
+        ));
         return allPetitions;
     }
 
@@ -126,21 +120,6 @@ public class PetitionServiceImpl implements PetitionService {
         }
         var signatures = signatureService.getAllSigned(user.getIin());
         return toPetitionsDto(signatures);
-    }
-
-    @Override
-    public PetitionResponseDto isMyPetition(User user, EntityIdDto dto) throws PetitionNotFoundException {
-        var opt = db.findById(dto.getId());
-        if (opt.isEmpty()) {
-            throw new PetitionNotFoundException(
-                    ErrorCodeUtil.ERR_PETITION_NOT_FOUND.name(),
-                    PETITION_NOT_FOUND_MSG
-            );
-        }
-        var petition = opt.get();
-        return PetitionResponseDto.builder()
-                .isOwner(user.getId().equals(petition.getCreatedBy()))
-                .build();
     }
 
     @Override

@@ -32,8 +32,6 @@ public interface PetitionService {
 
     PetitionsDto findSignedPetitions(User user);
 
-    PetitionResponseDto isMyPetition(User user, EntityIdDto dto) throws PetitionNotFoundException;
-
     MessageDto signEds(EdsDto dto, User user) throws PetitionNotFoundException, SignException, NoSuchAlgorithmException;
 
     MessageDto signXml(SignXmlDto dto, User user) throws SignException;

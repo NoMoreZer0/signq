@@ -61,12 +61,6 @@ public class PetitionController {
         return ResponseEntity.ok().body(petitionService.getCreatedPetitions(user));
     }
 
-    @PostMapping("/isMy")
-    public ResponseEntity<PetitionResponseDto> isMyPetition(@RequestBody EntityIdDto entityIdDto) {
-        var user = getCurrentUser();
-        return ResponseEntity.ok().body(petitionService.isMyPetition(user, entityIdDto));
-    }
-
     @GetMapping("/signed")
     public ResponseEntity<PetitionsDto> getSignedPetition() {
         var user = getCurrentUser();
