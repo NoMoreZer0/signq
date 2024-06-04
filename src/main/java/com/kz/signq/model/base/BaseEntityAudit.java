@@ -1,5 +1,6 @@
 package com.kz.signq.model.base;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
@@ -22,6 +23,7 @@ public abstract class BaseEntityAudit extends BaseEntity implements Serializable
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
+    @JsonFormat(pattern = "dd.MM.yyyy")
     private Date createdAt;
 
     @UpdateTimestamp
