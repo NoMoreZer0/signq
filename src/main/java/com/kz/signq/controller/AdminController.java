@@ -4,10 +4,7 @@ import com.kz.signq.dto.MessageDto;
 import com.kz.signq.service.PetitionStatusService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -26,5 +23,10 @@ public class AdminController {
     @PostMapping("/reject")
     public ResponseEntity<MessageDto> reject(@RequestParam("petition_id") UUID petitionId) {
         return ResponseEntity.ok().body(petitionStatusService.reject(petitionId));
+    }
+
+    @GetMapping("/check")
+    public ResponseEntity<String> check() {
+        return ResponseEntity.ok().body("You have access");
     }
 }
