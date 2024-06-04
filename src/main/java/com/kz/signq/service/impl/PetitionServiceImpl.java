@@ -145,8 +145,11 @@ public class PetitionServiceImpl implements PetitionService {
     @Override
     public MessageDto signXml(SignXmlDto dto, User user) throws SignException {
         var signature = signatureService.checkCertificateXml(user, dto.getPetitionId(), dto.getXml());
+        var petition = db.findById(dto.getPetitionId()).orElse(null);
         signatureService.saveSignatureXml(user.getIin(), dto.getPetitionId(), signature);
-        petitionStatusService.process(dto.getPetitionId());
+        if (petition != null && petition.getCreatedBy().equals(user.getId())) {
+            petitionStatusService.process(dto.getPetitionId());
+        }
         return MessageDto.builder()
                 .msg("Успешно подписано")
                 .build();

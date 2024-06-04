@@ -33,6 +33,7 @@ public class PetitionStatusServiceImpl implements PetitionStatusService {
             switch (petition.getStatus()) {
                 case DRAFT -> petition.setStatus(PetitionStatus.ON_REVIEW);
                 case ON_REVIEW -> petition.setStatus(PetitionStatus.PUBLISH);
+                case PUBLISH -> petition.setStatus(PetitionStatus.ON_FINAL_REVIEW);
                 case ON_FINAL_REVIEW -> petition.setStatus(PetitionStatus.ACCEPT);
                 default -> log.info("no action process: {}", petition.getStatus());
             }
