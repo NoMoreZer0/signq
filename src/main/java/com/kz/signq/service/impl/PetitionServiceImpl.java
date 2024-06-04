@@ -18,6 +18,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
@@ -149,6 +150,22 @@ public class PetitionServiceImpl implements PetitionService {
         return MessageDto.builder()
                 .msg("Успешно подписано")
                 .build();
+    }
+
+    @Override
+    public List<Petition> getReviewPetitions(int page, int size, String status, String sortBy, String orderBy) {
+        Pageable pageable;
+        if (orderBy.equals("desc")) {
+            pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
+        } else {
+            pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
+        }
+
+        if (status.isEmpty()) {
+            return db.findAll(pageable).stream().toList();
+        }
+
+        return db.findAllByStatus(PetitionStatus.valueOf(status), pageable);
     }
 
     private PetitionsDto toPetitionsDto(List<DigitalSignature> signatures) {

@@ -16,4 +16,6 @@ public interface PetitionDb extends JpaRepository<Petition, UUID> {
     List<Petition> findAllByCreatedBy(UUID userId);
 
     List<Petition> findAllByStatusIn(Collection<PetitionStatus> status, Pageable pageable);
+
+    List<Petition> findAllByStatus(PetitionStatus status, Pageable pageable);
 }

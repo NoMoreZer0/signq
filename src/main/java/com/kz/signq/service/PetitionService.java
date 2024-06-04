@@ -35,4 +35,6 @@ public interface PetitionService {
     MessageDto signEds(EdsDto dto, User user) throws PetitionNotFoundException, SignException, NoSuchAlgorithmException;
 
     MessageDto signXml(SignXmlDto dto, User user) throws SignException;
+
+    List<Petition> getReviewPetitions(int page, int size, String status, String sort, String orderBy);
 }
