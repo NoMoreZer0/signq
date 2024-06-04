@@ -27,7 +27,7 @@ public class AdminPetitionController {
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "20", required = false) int size,
             @RequestParam(name = "status", defaultValue = "", required = false) String status,
-            @RequestParam(name = "sort_by", defaultValue = "createdBy", required = false) String sortBy,
+            @RequestParam(name = "sort_by", defaultValue = "createdAt", required = false) String sortBy,
             @RequestParam(name = "order_by", defaultValue = "asc", required = false) String orderBy
     ) {
         return ResponseEntity.ok().body(petitionService.getReviewPetitions(page, size, status, sortBy, orderBy));
