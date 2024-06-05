@@ -21,4 +21,6 @@ public interface SignatureService {
     String checkCertificateXml(User user, UUID petitionId, String xml) throws SignException;
 
     void saveSignatureXml(String userIin, UUID petitionId, String signature);
+
+    long countSignaturesForPetition(UUID petitionId);
 }

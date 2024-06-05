@@ -1,6 +1,7 @@
 package com.kz.signq.service.impl;
 
 import com.kz.signq.db.DigitalSignatureDb;
+import com.kz.signq.db.DigitalSignatureXmlDb;
 import com.kz.signq.dto.signature.VerifyDto;
 import com.kz.signq.dto.signature.response.VerifyResponseDto;
 import com.kz.signq.exception.SignException;
@@ -34,6 +35,8 @@ public class SignatureServiceImpl implements SignatureService {
     private final SignatureCheckUtil signatureCheckUtil;
 
     private final DigitalSignatureDb db;
+
+    private final DigitalSignatureXmlDb dbXml;
 
     private static final String NCA_NODE_ENDPOINT = "http://localhost:14579";
 
@@ -162,5 +165,10 @@ public class SignatureServiceImpl implements SignatureService {
     public byte[] createDataSnapshot(Petition petition) throws NoSuchAlgorithmException {
         var applicationString = signatureUtil.objectToString(petition);
         return signatureUtil.dataToSha256Bytes(applicationString);
+    }
+
+    @Override
+    public long countSignaturesForPetition(UUID petitionId) {
+        return dbXml.countByPetitionId(petitionId);
     }
 }

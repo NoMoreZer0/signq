@@ -7,6 +7,7 @@ import com.kz.signq.model.PetitionStatus;
 import jakarta.annotation.Nullable;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.UUID;
 
@@ -36,6 +37,11 @@ public class PetitionResponseDto {
     @Nullable
     @JsonProperty("file_id")
     private UUID fileId;
+
+    @Setter
+    @Nullable
+    @JsonProperty("signed_count")
+    private Long signedCount;
 
     public static PetitionResponseDto fromPetition(Petition petition) {
         return PetitionResponseDto.builder()

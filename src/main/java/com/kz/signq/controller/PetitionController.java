@@ -9,7 +9,6 @@ import com.kz.signq.dto.petition.response.PetitionResponseDto;
 import com.kz.signq.dto.signature.SignXmlDto;
 import com.kz.signq.exception.PetitionNotFoundException;
 import com.kz.signq.exception.SignException;
-import com.kz.signq.model.Petition;
 import com.kz.signq.model.User;
 import com.kz.signq.service.PetitionService;
 import lombok.RequiredArgsConstructor;
@@ -49,10 +48,10 @@ public class PetitionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Petition> getById(
+    public ResponseEntity<PetitionResponseDto> getById(
             @PathVariable UUID id
     ) {
-        return ResponseEntity.ok().body(petitionService.getById(id).orElse(null));
+        return ResponseEntity.ok().body(petitionService.getById(id));
     }
 
     @GetMapping("/my")

@@ -9,4 +9,5 @@ import java.util.UUID;
 @Repository
 public interface DigitalSignatureXmlDb extends JpaRepository<DigitalSignatureXml, Long> {
     boolean existsByUserIinAndPetitionId(String userIin, UUID petitionId);
+    long countByPetitionId(UUID petitionId);
 }

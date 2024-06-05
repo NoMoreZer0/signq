@@ -11,8 +11,6 @@ import java.util.UUID;
 @Repository
 public interface DigitalSignatureDb extends JpaRepository<DigitalSignature, UUID> {
     Optional<DigitalSignature> findByData(String data);
-
     List<DigitalSignature> findAllByUserIin(String userIIn);
-
     boolean existsByUserIinAndPetitionId(String userIin, UUID petitionId);
 }

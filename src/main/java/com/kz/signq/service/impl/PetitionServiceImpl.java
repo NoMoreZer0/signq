@@ -9,10 +9,14 @@ import com.kz.signq.dto.petition.PetitionsDto;
 import com.kz.signq.dto.petition.response.PetitionResponseDto;
 import com.kz.signq.dto.signature.SignXmlDto;
 import com.kz.signq.exception.EntityNotFoundException;
+import com.kz.signq.exception.ErrorCodeException;
 import com.kz.signq.exception.PetitionNotFoundException;
 import com.kz.signq.exception.SignException;
 import com.kz.signq.model.*;
-import com.kz.signq.service.*;
+import com.kz.signq.service.FileService;
+import com.kz.signq.service.PetitionService;
+import com.kz.signq.service.PetitionStatusService;
+import com.kz.signq.service.SignatureService;
 import com.kz.signq.utils.ErrorCodeUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +28,6 @@ import org.springframework.stereotype.Service;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -67,8 +70,14 @@ public class PetitionServiceImpl implements PetitionService {
     }
 
     @Override
-    public Optional<Petition> getById(UUID id) {
-        return db.findById(id);
+    public PetitionResponseDto getById(UUID id) {
+        var opt = db.findById(id);
+        if (opt.isEmpty()) {
+            throw new ErrorCodeException("ERR_PETITION_NOT_FOUND", "petition not found");
+        }
+        var petition = PetitionResponseDto.fromPetition(opt.get());
+        petition.setSignedCount(signatureService.countSignaturesForPetition(id));
+        return petition;
     }
 
     @Override

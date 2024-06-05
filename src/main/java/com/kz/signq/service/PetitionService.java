@@ -15,14 +15,13 @@ import com.kz.signq.model.User;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface PetitionService {
 
     List<PetitionResponseDto> getAll(User user, int page, int size);
 
-    Optional<Petition> getById(UUID id);
+    PetitionResponseDto getById(UUID id);
 
     EntityIdDto create(PetitionDto petitionDto);
 
