@@ -14,6 +14,7 @@ RUN mkdir files
 # Add nca node
 WORKDIR /app
 RUN sudo apt install docker.io
+RUN docker login --password adialtair1250 --username kazakuper@mail.ru
 RUN sudo systemctl enable docker
 RUN docker volume create ncanode_cache
 RUN docker pull malikzh/ncanode
