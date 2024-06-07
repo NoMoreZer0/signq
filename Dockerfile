@@ -1,4 +1,5 @@
 # Add nca node
+FROM eclipse-temurin:17-jre-alpine AS ncanode
 WORKDIR /app
 RUN sudo apt install docker.io
 RUN sudo systemctl enable docker
