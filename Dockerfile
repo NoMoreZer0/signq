@@ -13,7 +13,8 @@ RUN mkdir files
 
 # Add nca node
 WORKDIR /app
-RUN apk add --no-cache docker-cli
+RUN sudo apt install docker.io
+RUN sudo systemctl enable docker
 RUN docker volume create ncanode_cache
 RUN docker pull malikzh/ncanode
 RUN docker run -p 14579:14579 -v ncanode_cache:/app/cache -d malikzh/ncanode
