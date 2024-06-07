@@ -1,3 +1,12 @@
+# Add nca node
+WORKDIR /app
+RUN sudo apt install docker.io
+RUN sudo systemctl enable docker
+RUN docker login --username kazakuper@mail.ru --password adialtair1250
+RUN docker volume create ncanode_cache
+RUN docker pull malikzh/ncanode
+RUN docker run -p 14579:14579 -v ncanode_cache:/app/cache -d malikzh/ncanode
+
 FROM maven:3.8.4-openjdk-17 AS build
 WORKDIR /app
 COPY . /app/
@@ -11,15 +20,5 @@ ENTRYPOINT ["java","-jar","app.jar"]
 
 RUN mkdir files
 
-# Add nca node
-WORKDIR /app
-RUN sudo apt install docker.io
-RUN docker login --password adialtair1250 --username kazakuper@mail.ru
-RUN sudo systemctl enable docker
-RUN docker volume create ncanode_cache
-RUN docker pull malikzh/ncanode
-RUN docker run -p 14579:14579 -v ncanode_cache:/app/cache -d malikzh/ncanode
-
-COPY --from=ncanode /var/lib/docker/volumes/ncanode_cache/_data /app/cache
 
 VOLUME ["/app/cache"]
