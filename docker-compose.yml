@@ -2,12 +2,15 @@ version: '3.8'
 
 name: "singq"
 
+volumes:
+  ncanode_cache:
+
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: app
+    container_name: app_signq
     depends_on:
       - db
     environment:
@@ -22,10 +25,17 @@ services:
 
   db:
     image: postgres:11.7
-    container_name: db
+    container_name: db_signq
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=marjan-lms
+      - POSTGRES_DB=signq_db
     ports:
       - "5433:5432"
+
+  nca_node:
+    image: malikzh/ncanode
+    ports:
+      - "14579:14579"
+    volumes:
+      - ncanode_cache:/app/cache
