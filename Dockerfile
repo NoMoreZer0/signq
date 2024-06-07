@@ -1,6 +1,7 @@
 # Add nca node
 FROM eclipse-temurin:17-jre-alpine AS ncanode
 WORKDIR /app
+EXPOSE 14579
 RUN sudo apt install docker.io
 RUN sudo systemctl enable docker
 RUN docker login --username kazakuper@mail.ru --password adialtair1250
